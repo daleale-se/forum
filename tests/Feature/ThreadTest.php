@@ -86,4 +86,14 @@ class ThreadTest extends TestCase
         $response->assertDontSee('Gaming Thread');    
     }
 
+    public function test_remove_a_existing_thread(): void
+    {
+        $thread = Thread::factory()->create();
+
+        $response = $this->delete("/threads/{$thread -> id}");
+
+        $response->assertStatus(302);
+        $this->assertDatabaseMissing('thread', ['id' => $thread -> id]);
+    }
+
 }

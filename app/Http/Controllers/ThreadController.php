@@ -7,6 +7,7 @@ use App\Models\Thread;
 
 class ThreadController extends Controller
 {
+    
     public function index(Request $request) {
         $category = $request->query('category');
     
@@ -30,4 +31,10 @@ class ThreadController extends Controller
 
         return view('thread', ['thread' => $thread]);
     }
+
+    public function destroy($id) {
+        Thread::findOrFail($id)->delete();
+        return redirect('/');
+    }
+
 }
