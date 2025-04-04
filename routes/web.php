@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ThreadController;
+use App\Models\Thread;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,5 +16,6 @@ use App\Http\Controllers\ThreadController;
 */
 
 Route::get('/', [ThreadController::class, 'index']);
+Route::get('/threads', [ThreadController::class, 'index']);
 Route::post('/threads', [ThreadController::class, 'store']);
 Route::get('/threads/{id}', [ThreadController::class, 'thread_page']);

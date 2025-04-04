@@ -40,8 +40,8 @@ class ThreadTest extends TestCase
     public function test_it_shows_all_threads_on_the_homepage(): void
     {
         // Arrange: create some threads in the database
-        $thread1 = Thread::factory()->create(['title' => 'First Thread']);
-        $thread2 = Thread::factory()->create(['title' => 'Second Thread']);
+        Thread::factory()->create(['title' => 'First Thread']);
+        Thread::factory()->create(['title' => 'Second Thread']);
 
         // Act: visit the homepage
         $response = $this->get('/');
@@ -52,7 +52,7 @@ class ThreadTest extends TestCase
         $response->assertSeeText('Second Thread');
     }
 
-    public function test_show_page_of_a_thread_with_its_data():void
+    public function test_it_shows_the_page_of_a_thread_with_its_data():void
     {
         // Arrange: create one thread 
         $data = [
@@ -70,6 +70,20 @@ class ThreadTest extends TestCase
         $response->assertSeeText('Title of the Thread');
         $response->assertSeeText('This is the body of the thread.');
         $response->assertSeeText('general');
+    }
+
+    public function test_it_shows_only_the_threads_filter_by_general_category(): void
+    {
+        Thread::factory()->create(['title' => 'General Thread 1', 'category' => 'general']);
+        Thread::factory()->create(['title' => 'Gaming Thread', 'category' => 'games']);
+        Thread::factory()->create(['title' => 'General Thread 2', 'category' => 'general']);
+    
+        $response = $this->get('/threads/?category=general');
+
+        $response->assertStatus(200);
+        $response->assertSee('General Thread 1');
+        $response->assertSee('General Thread 2');
+        $response->assertDontSee('Gaming Thread');    
     }
 
 }

@@ -19,7 +19,7 @@ class ThreadFactory extends Factory
         return [
             'title' => $this->faker->sentence,
             'body' => $this->faker->paragraph,
-            'category' => 'general',
+            'category' => $this->faker->sentence,
         ];
     }
     

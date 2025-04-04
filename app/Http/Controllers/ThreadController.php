@@ -7,13 +7,14 @@ use App\Models\Thread;
 
 class ThreadController extends Controller
 {
-
-    public function index() {
-        $threads = Thread::all();
-
+    public function index(Request $request) {
+        $category = $request->query('category');
+    
+        $threads = $category ? Thread::where('category', $category)->get() : Thread::all();
+    
         return view('index', ['threads' => $threads]);
     }
-
+    
     public function store(Request $request) {
         Thread::create([
             'title' => $request->title,
@@ -29,5 +30,4 @@ class ThreadController extends Controller
 
         return view('thread', ['thread' => $thread]);
     }
-
 }
