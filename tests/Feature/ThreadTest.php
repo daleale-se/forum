@@ -30,7 +30,7 @@ class ThreadTest extends TestCase
         ];
 
         // Act: create a thread in the database
-        $response = $this->post('/threads', $data);
+        $response = $this->post(route('threads.store', $data));
 
         // Assert: check if the database has the created thread
         $response->assertStatus(302);
@@ -44,7 +44,7 @@ class ThreadTest extends TestCase
         Thread::factory()->create(['title' => 'Second Thread']);
 
         // Act: visit the homepage
-        $response = $this->get('/');
+        $response = $this->get(route('threads.home'));
 
         // Assert: check if the thread titles appear in the response
         $response->assertStatus(200);
@@ -63,7 +63,7 @@ class ThreadTest extends TestCase
         $thread = Thread::factory()->create($data);
 
         // Act: visit the created thread page 
-        $response = $this->get("/threads/{$thread -> id}");
+        $response = $this->get(route('threads.show', ['id' => $thread->id]));
 
         // Assert: check if the page show all the created thread data
         $response->assertStatus(200);
@@ -74,24 +74,30 @@ class ThreadTest extends TestCase
 
     public function test_it_shows_only_the_threads_filter_by_general_category(): void
     {
+        // Arrange: create three threads: two with general category and one with games category
         Thread::factory()->create(['title' => 'General Thread 1', 'category' => 'general']);
         Thread::factory()->create(['title' => 'Gaming Thread', 'category' => 'games']);
         Thread::factory()->create(['title' => 'General Thread 2', 'category' => 'general']);
     
-        $response = $this->get('/threads/?category=general');
+        // Act: visit the home page with the query 'category=general'  
+        $response = $this->get(route('threads.index', ['category' => 'general']));
 
+        // Assert: check if the page show two threads
         $response->assertStatus(200);
         $response->assertSee('General Thread 1');
         $response->assertSee('General Thread 2');
         $response->assertDontSee('Gaming Thread');    
     }
 
-    public function test_remove_a_existing_thread(): void
+    public function test_a_thread_can_be_removed(): void
     {
+        // Arrange: create one thread 
         $thread = Thread::factory()->create();
 
-        $response = $this->delete("/threads/{$thread -> id}");
+        // Act: Remove the created thread from database  
+        $response = $this->delete(route('threads.destroy', ['id' => $thread->id]));
 
+        // Assert: check if the created thread had been eliminated
         $response->assertStatus(302);
         $this->assertDatabaseMissing('thread', ['id' => $thread -> id]);
     }

@@ -15,8 +15,8 @@ use App\Models\Thread;
 |
 */
 
-Route::get('/', [ThreadController::class, 'index']);
-Route::get('/threads', [ThreadController::class, 'index']);
-Route::post('/threads', [ThreadController::class, 'store']);
-Route::get('/threads/{id}', action: [ThreadController::class, 'thread_page']);
-Route::delete('/threads/{id}', action: [ThreadController::class, 'destroy']);
+Route::get('/', [ThreadController::class, 'index'])->name('threads.home');
+Route::get('/threads', [ThreadController::class, 'index'])->name('threads.index');
+Route::post('/threads', [ThreadController::class, 'store'])->name('threads.store');
+Route::get('/threads/{id}', [ThreadController::class, 'thread_page'])->name('threads.show');
+Route::delete('/threads/{id}', [ThreadController::class, 'destroy'])->name('threads.destroy');
