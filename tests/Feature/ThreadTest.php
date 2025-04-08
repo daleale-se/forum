@@ -133,10 +133,23 @@ class ThreadTest extends TestCase
         $this->assertDatabaseMissing('thread', ['id' => $thread->id]);
     }
 
-    // public function test_a_thread_can_be_liked(): void
-    // {
-        
-    // }
+    public function test_a_thread_can_be_liked(): void
+    {
+        // Arrange: Create a thread with 0 likes
+        $thread = Thread::factory()->create([
+            'likes' => 0,
+        ]);
+
+        // Act: Hit the route that adds a like
+        $response = $this->putJson(route('threads.add_like', ['id' => $thread->id]));
+
+        // Refresh the model to get updated data from DB
+        $thread->refresh();
+
+        // Assert: Thread has 1 like now and response is okay
+        $response->assertStatus(200);
+        $this->assertEquals(1, $thread->likes);
+    }
 
     // public function test_a_thread_can_be_updated_for_the_op(): void
     // {

@@ -19,4 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::put('/threads/{id}/add_like', [ThreadController::class, 'add_like'])->name('threads.add_like');
 Route::delete('/threads/{id}', [ThreadController::class, 'destroy'])->name('threads.destroy');

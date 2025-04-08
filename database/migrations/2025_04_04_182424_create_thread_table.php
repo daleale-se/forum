@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('body');
             $table->string('category');
+            $table->integer('likes')->default(0);;
             $table->timestamps();
         });
     }

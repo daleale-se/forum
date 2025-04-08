@@ -28,7 +28,6 @@ class ThreadController extends Controller
 
     public function thread_page($id) {
         $thread = Thread::find($id);
-
         return view('thread', ['thread' => $thread]);
     }
 
@@ -39,6 +38,12 @@ class ThreadController extends Controller
 
     public function thread_form() {
         return view('form');
+    }
+
+    public function add_like($id){
+        $thread = Thread::find($id);
+        $thread->increment('likes');
+        return response()->json(['likes' => $thread->likes], 200);
     }
 
 }
