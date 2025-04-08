@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ThreadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [ThreadController::class, 'index'])->name('threads.home');
+Route::get('/threads', [ThreadController::class, 'index'])->name('threads.index');
+Route::get('/threads/{id}', [ThreadController::class, 'thread_page'])->name('threads.show');
+Route::post('/threads', [ThreadController::class, 'store'])->name('threads.store');
+Route::get('/form', [ThreadController::class, 'thread_form'])->name('threads.form');
