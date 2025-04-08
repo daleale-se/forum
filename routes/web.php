@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ThreadController;
-use App\Models\Thread;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +16,6 @@ use App\Models\Thread;
 
 Route::get('/', [ThreadController::class, 'index'])->name('threads.home');
 Route::get('/threads', [ThreadController::class, 'index'])->name('threads.index');
-Route::post('/threads', [ThreadController::class, 'store'])->name('threads.store');
 Route::get('/threads/{id}', [ThreadController::class, 'thread_page'])->name('threads.show');
-Route::delete('/threads/{id}', [ThreadController::class, 'destroy'])->name('threads.destroy');
+Route::post('/threads', [ThreadController::class, 'store'])->name('threads.store');
+Route::get('/form', [ThreadController::class, 'thread_form'])->name('threads.form');

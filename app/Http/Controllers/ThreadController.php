@@ -23,7 +23,7 @@ class ThreadController extends Controller
             'category' => $request->category,
         ]);
 
-        return response('/', 302);
+        return redirect('/', 302);
     }
 
     public function thread_page($id) {
@@ -34,7 +34,11 @@ class ThreadController extends Controller
 
     public function destroy($id) {
         Thread::findOrFail($id)->delete();
-        return redirect('/');
+        return response()->json(data: ['message' => 'Thread deleted'], status: 200);
+    }
+
+    public function thread_form() {
+        return view('form');
     }
 
 }

@@ -98,8 +98,49 @@ class ThreadTest extends TestCase
         $response = $this->delete(route('threads.destroy', ['id' => $thread->id]));
 
         // Assert: check if the created thread had been eliminated
-        $response->assertStatus(302);
+        $response->assertStatus(200);
         $this->assertDatabaseMissing('thread', ['id' => $thread -> id]);
     }
+
+    public function test_it_shows_a_form_when_we_want_to_create_new_thread(): void
+    {
+        // Arrange: (no setup needed since we’re just viewing the form page)
+
+        // Act: Make a GET request to the form page
+        $response = $this->get(route('threads.form'));
+
+        // Assert: Check that the response is successful and contains the form elements
+        $response->assertStatus(200);
+        $response->assertSeeText('New thread');
+        $response->assertSeeText('Title');
+        $response->assertSeeText('Body');
+        $response->assertSeeText('Resource');
+        $response->assertSeeText('Category');
+        $response->assertSeeText('Create thread');
+    }
+
+    public function test_a_thread_is_deleted_after_seven_days(): void
+    {
+        // Arrange: Create a thread 8 days ago
+        $thread = Thread::factory()->create([
+            'created_at' => now()->subDays(8),
+        ]);
+
+        // Act: Run the deletion logic
+        Artisan::call('threads:delete-old');
+
+        // Assert: Thread no longer exists
+        $this->assertDatabaseMissing('thread', ['id' => $thread->id]);
+    }
+
+    // public function test_a_thread_can_be_liked(): void
+    // {
+        
+    // }
+
+    // public function test_a_thread_can_be_updated_for_the_op(): void
+    // {
+        
+    // }
 
 }
