@@ -9,10 +9,10 @@ class TemporalUser extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['thread_id', 'assigned_username'];
+    protected $fillable = ['assigned_username'];
 
-    public function thread(){
-        return $this->belongsTo(Thread::class);
+    public function threads(){
+        return $this->hasMany(Thread::class, 'temporal_user_id');
     }
 
 }
