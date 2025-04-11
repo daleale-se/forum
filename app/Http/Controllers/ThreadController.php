@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Thread;
+use App\Models\TemporalUser;
 
 class ThreadController extends Controller
 {
@@ -17,10 +18,15 @@ class ThreadController extends Controller
     }
     
     public function store(Request $request) {
-        Thread::create([
+        $thread = Thread::create([
             'title' => $request->title,
             'body' => $request->body,
             'category' => $request->category,
+        ]);
+
+        TemporalUser::create([
+            'thread_id' => $thread['id'],
+            'assigned_username' => "ale"
         ]);
 
         return redirect('/', 302);

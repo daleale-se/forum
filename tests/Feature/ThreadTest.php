@@ -34,7 +34,7 @@ class ThreadTest extends TestCase
 
         // Assert: check if the database has the created thread
         $response->assertStatus(302);
-        $this->assertDatabaseHas('thread', ['title' => 'A Test Thread']);
+        $this->assertDatabaseHas('threads', ['title' => 'A Test Thread']);
     }
 
     public function test_it_shows_all_threads_on_the_homepage(): void
@@ -99,7 +99,7 @@ class ThreadTest extends TestCase
 
         // Assert: check if the created thread had been eliminated
         $response->assertStatus(200);
-        $this->assertDatabaseMissing('thread', ['id' => $thread -> id]);
+        $this->assertDatabaseMissing('threads', ['id' => $thread -> id]);
     }
 
     public function test_it_shows_a_form_when_we_want_to_create_new_thread(): void
@@ -130,7 +130,7 @@ class ThreadTest extends TestCase
         Artisan::call('threads:delete-old');
 
         // Assert: Thread no longer exists
-        $this->assertDatabaseMissing('thread', ['id' => $thread->id]);
+        $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
     }
 
     public function test_a_thread_can_be_liked(): void
@@ -141,7 +141,7 @@ class ThreadTest extends TestCase
         ]);
 
         // Act: Hit the route that adds a like
-        $response = $this->putJson(route('threads.add_like', ['id' => $thread->id]));
+        $response = $this->put(route('threads.add_like', ['id' => $thread->id]));
 
         // Refresh the model to get updated data from DB
         $thread->refresh();
@@ -150,10 +150,5 @@ class ThreadTest extends TestCase
         $response->assertStatus(200);
         $this->assertEquals(1, $thread->likes);
     }
-
-    // public function test_a_thread_can_be_updated_for_the_op(): void
-    // {
-        
-    // }
 
 }

@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('threads', function (Blueprint $table) {
+        Schema::create('temporal_users', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('body');
-            $table->string('category');
-            $table->integer('likes')->default(0);;
+            $table->foreignId('thread_id')->constrained()->onDelete('cascade');
+            $table->string('assigned_username');
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('threads');
+        Schema::dropIfExists('temporal_users');
     }
 };
