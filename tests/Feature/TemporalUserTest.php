@@ -7,6 +7,8 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Thread;
 use App\Models\TemporalUser;
+use App\Models\Comment;
+use Illuminate\Support\Carbon;
 
 class TemporalUserTest extends TestCase
 {
@@ -78,11 +80,11 @@ class TemporalUserTest extends TestCase
 
         $thread = Thread::factory()->create();
 
-        $data = [
+        $commentData = [
             'body' => 'Test body',
         ];
     
-        $response = $this->post(route('comments.store', ['id' => $thread->id]), $data);
+        $response = $this->post(route('comments.store', ['id' => $thread->id]), $commentData);
     
         $response->assertStatus(200);
         $this->assertDatabaseCount('comments', 1);
@@ -91,17 +93,11 @@ class TemporalUserTest extends TestCase
     public function test_thread_page_displays_publisher_temporal_username()
     {
         $username = "username_test";
-        $temp_user = TemporalUser::factory()->create([
+        $tempUser = TemporalUser::factory()->create([
             "assigned_username" => $username
         ]);
         
-        $thread_data = [
-            'title' => 'Title of the Thread',
-            'body' => 'This is the body of the thread.',
-            'category' => 'general',
-        ];
-        
-        $thread = Thread::factory()->for($temp_user)->create($thread_data);
+        $thread = Thread::factory()->for($tempUser)->create();
 
         $response = $this->get(route('threads.show', ['id' => $thread->id]));
 
@@ -109,10 +105,47 @@ class TemporalUserTest extends TestCase
         $response->assertSeeText($username);
     }
 
-    // public function test_thread_page_displays_different_temporal_users_comments_in_order()
-    // {
+    public function test_thread_page_displays_different_temporal_users_comments_in_order()
+    {
+        $thread = Thread::factory()->create();
 
-    // }
+        $firstUsername = "first_user";
+        $firstTempUser = TemporalUser::factory()->create([
+            "assigned_username" => $firstUsername
+        ]);
+
+        $secondUsername = "second_user";
+        $secondTempUser = TemporalUser::factory()->create([
+            "assigned_username" => $secondUsername
+        ]);
+
+        $firstCommentData = [
+            'thread_id' => $thread->id,
+            'temporal_user_id' => $firstTempUser->id,
+            'created_at' => Carbon::now()->subMinute(),
+        ];
+
+        $secondCommentData = [
+            'thread_id' => $thread->id,
+            'temporal_user_id' => $secondTempUser->id,
+            'created_at' => Carbon::now(),
+        ];
+
+        Comment::factory()->create($firstCommentData);
+        Comment::factory()->create($secondCommentData);
+
+        $response = $this->get(route('threads.show', ['id' => $thread->id]));
+
+        $content = $response->getContent();
+
+        $response->assertStatus(200);
+        $response->assertSeeText($firstUsername);
+        $response->assertSeeText($secondUsername);
+        $this->assertTrue(
+            strpos($content, $secondUsername) < strpos($content, $firstUsername),
+            'Expected "second_user" to appear before "first_user" in the response.'
+        );
+    }
 
     // public function test_it_shows_all_the_comments_in_the_thread_page()
     // {

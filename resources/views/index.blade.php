@@ -10,7 +10,7 @@
     <h1>Threads</h1>
 
     @foreach ($threads as $thread)
-        <li>{{ $thread -> title }}</li>
+        <li>{{ $thread->title }}</li>
     @endforeach
 
 </body>

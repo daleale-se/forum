@@ -15,5 +15,14 @@
     <h1>{{ $thread->title }}</h1>
     <p>{{ $thread->body }}</p>
 
+    <ul>
+        @foreach ($thread->comments as $comment)
+            <li>
+                <span>{{ $comment->temporalUser->assigned_username }}</span>
+                <p>{{ $comment->body }}</p>
+            </li>
+        @endforeach
+    </ul>
+
 </body>
 </html>
