@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Thread;
+use App\Models\TemporalUser;
 
 class ThreadController extends Controller
 {
-    
+
     public function index(Request $request) {
         $category = $request->query('category');
     
@@ -17,13 +18,25 @@ class ThreadController extends Controller
     }
     
     public function store(Request $request) {
+
+        $temporalUserId = session('temporal_user_id');
+
+        if (!$temporalUserId) {
+            $temporalUser = TemporalUser::create([
+                'assigned_username' => TemporalUser::generateUsername(),
+            ]);
+            session(['temporal_user_id' => $temporalUser->id]);
+            $temporalUserId = $temporalUser->id;
+        }
+    
         Thread::create([
             'title' => $request->title,
             'body' => $request->body,
             'category' => $request->category,
+            'temporal_user_id' => $temporalUserId,
         ]);
-
-        return redirect('/', 302);
+    
+        return redirect('/');
     }
 
     public function thread_page($id) {

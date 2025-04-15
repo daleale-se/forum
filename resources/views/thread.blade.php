@@ -7,9 +7,22 @@
 </head>
 <body>
 
-    <h1>{{ $thread -> title }}</h1>
-    <p>{{ $thread -> body }}</p>
-    <span>{{ $thread -> category }}</span>
+    <ul>
+        <li>{{ $thread->temporalUser->assigned_username ?? 'Anonymous' }}</li>
+        <li>{{ $thread->category }}</li>
+    </ul>
+
+    <h1>{{ $thread->title }}</h1>
+    <p>{{ $thread->body }}</p>
+
+    <ul>
+        @foreach ($thread->comments as $comment)
+            <li>
+                <span>{{ $comment->temporalUser->assigned_username }}</span>
+                <p>{{ $comment->body }}</p>
+            </li>
+        @endforeach
+    </ul>
 
 </body>
 </html>

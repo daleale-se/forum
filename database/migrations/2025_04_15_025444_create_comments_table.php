@@ -11,22 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('threads', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->foreignId('thread_id')->constrained()->onDelete('cascade');
+            $table->foreignId('temporal_user_id')->constrained()->onDelete('cascade');
             $table->text('body');
-            $table->string('category');
-            $table->foreignId('temporal_user_id')->nullable()->constrained()->onDelete('cascade');
-            $table->integer('likes')->default(0);;
             $table->timestamps();
         });
     }
+    
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('threads');
+        Schema::dropIfExists('comments');
     }
 };

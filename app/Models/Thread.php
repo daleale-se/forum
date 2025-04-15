@@ -9,12 +9,19 @@ class Thread extends Model
 {
     use HasFactory;
 
-    protected $table = 'thread';
-
     protected $fillable = [
         'title',
         'body',
         'category',
+        'temporal_user_id'
     ];
+
+    public function temporalUser(){
+        return $this->belongsTo(TemporalUser::class, 'temporal_user_id');
+    }    
+
+    public function comments(){
+        return $this->hasMany(Comment::class)->latest();
+    }
 
 }
