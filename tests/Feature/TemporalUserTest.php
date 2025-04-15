@@ -9,6 +9,7 @@ use App\Models\Thread;
 use App\Models\TemporalUser;
 use App\Models\Comment;
 use Illuminate\Support\Carbon;
+use Artisan;
 
 class TemporalUserTest extends TestCase
 {
@@ -147,15 +148,35 @@ class TemporalUserTest extends TestCase
         );
     }
 
-    // public function test_it_shows_all_the_comments_in_the_thread_page()
-    // {
+    public function test_a_temporal_user_without_thread_and_comments_is_deleted_after_two_weeks()
+    {
+        $tempUser = TemporalUser::factory()->create([
+            'created_at' => now()->subDays(15),
+        ]);
 
-    //     $data = [
-    //         'title' => 'Title of the Thread',
-    //         'body' => 'This is the body of the thread.',
-    //         'category' => 'general'
-    //     ];
-    //     $thread = Thread::factory()->create($data);
-        
-    // }
+        Artisan::call('temporal-user:delete-old');
+
+        $this->assertDatabaseMissing('temporal_users', ['id' => $tempUser->id]);
+    }
+
+    public function test_a_temporal_user_with_thread_and_comments_cannot_be_deleted_after_two_weeks()
+    {
+        $tempUser = TemporalUser::factory()->create([
+            'created_at' => now()->subDays(15),
+        ]);
+
+        $thread = Thread::factory()->create([
+            'temporal_user_id' => $tempUser->id,
+        ]);
+
+        Comment::factory()->create([
+            'temporal_user_id' => $tempUser->id,
+            'thread_id' => $thread->id,
+        ]);
+
+        Artisan::call('temporal-user:delete-old');
+
+        $this->assertDatabaseHas('temporal_users', ['id' => $tempUser->id]);
+    }
+
 }
