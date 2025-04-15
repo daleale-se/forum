@@ -79,12 +79,11 @@ class TemporalUserTest extends TestCase
         $thread = Thread::factory()->create();
 
         $data = [
-            'thread_id' => $thread->id,
-            'body' => 'Test body'
+            'body' => 'Test body',
         ];
-
-        $response = $this->post(route('comments.store', $data));
-
+    
+        $response = $this->post(route('comments.store', ['id' => $thread->id]), $data);
+    
         $response->assertStatus(200);
         $this->assertDatabaseCount('comments', 1);
     }

@@ -14,10 +14,7 @@ return new class extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('thread_id')->constrained()->onDelete('cascade');
-            $table->foreignId('temporal_user_id')
-                  ->constrained()              // Assumes temporal_users table is called 'temporal_users'
-                  ->onDelete('cascade');        // If a temporal user is deleted, delete their comments
-    
+            $table->foreignId('temporal_user_id')->constrained()->onDelete('cascade');
             $table->text('body');
             $table->timestamps();
         });

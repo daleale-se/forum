@@ -5,14 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Thread;
 use App\Models\TemporalUser;
-use Illuminate\Support\Str;
 
 class ThreadController extends Controller
 {
-    private function generateUsername(): string{
-        return 'user' . Str::random(6);
-    }
-    
+
     public function index(Request $request) {
         $category = $request->query('category');
     
@@ -27,13 +23,13 @@ class ThreadController extends Controller
 
         if (!$temporalUserId) {
             $temporalUser = TemporalUser::create([
-                'assigned_username' => $this->generateUsername(),
+                'assigned_username' => TemporalUser::generateUsername(),
             ]);
             session(['temporal_user_id' => $temporalUser->id]);
             $temporalUserId = $temporalUser->id;
         }
     
-        $thread = Thread::create([
+        Thread::create([
             'title' => $request->title,
             'body' => $request->body,
             'category' => $request->category,
