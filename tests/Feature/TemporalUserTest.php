@@ -73,4 +73,20 @@ class TemporalUserTest extends TestCase
         $this->assertEquals(2, $temporalUser->threads()->count());    
     }
 
+    public function test_a_temporal_user_is_created_when_a_comment_is_published(): void
+    {
+
+        $thread = Thread::factory()->create();
+
+        $data = [
+            'thread_id' => $thread->id,
+            'body' => 'Test body'
+        ];
+
+        $response = $this->post(route('comments.store', $data));
+
+        $response->assertStatus(200);
+        $this->assertDatabaseCount('comments', 1);
+    }
+
 }

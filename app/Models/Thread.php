@@ -20,4 +20,11 @@ class Thread extends Model
         return $this->belongsTo(TemporalUser::class, 'temporal_user_id');
     }    
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+    
+    
+
 }
