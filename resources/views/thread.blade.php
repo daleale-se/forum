@@ -7,9 +7,13 @@
 </head>
 <body>
 
-    <h1>{{ $thread -> title }}</h1>
-    <p>{{ $thread -> body }}</p>
-    <span>{{ $thread -> category }}</span>
+    <ul>
+        <li>{{ $thread->temporalUser->assigned_username ?? 'Anonymous' }}</li>
+        <li>{{ $thread->category }}</li>
+    </ul>
+
+    <h1>{{ $thread->title }}</h1>
+    <p>{{ $thread->body }}</p>
 
 </body>
 </html>

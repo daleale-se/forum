@@ -88,4 +88,41 @@ class TemporalUserTest extends TestCase
         $this->assertDatabaseCount('comments', 1);
     }
 
+    public function test_thread_page_displays_publisher_temporal_username()
+    {
+        $username = "username_test";
+        $temp_user = TemporalUser::factory()->create([
+            "assigned_username" => $username
+        ]);
+        
+        $thread_data = [
+            'title' => 'Title of the Thread',
+            'body' => 'This is the body of the thread.',
+            'category' => 'general',
+        ];
+        
+        $thread = Thread::factory()->for($temp_user)->create($thread_data);
+
+        $response = $this->get(route('threads.show', ['id' => $thread->id]));
+
+        $response->assertStatus(200);
+        $response->assertSeeText($username);
+    }
+
+    // public function test_thread_page_displays_different_temporal_users_comments_in_order()
+    // {
+
+    // }
+
+    // public function test_it_shows_all_the_comments_in_the_thread_page()
+    // {
+
+    //     $data = [
+    //         'title' => 'Title of the Thread',
+    //         'body' => 'This is the body of the thread.',
+    //         'category' => 'general'
+    //     ];
+    //     $thread = Thread::factory()->create($data);
+        
+    // }
 }
